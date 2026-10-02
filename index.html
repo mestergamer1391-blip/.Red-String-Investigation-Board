@@ -1,0 +1,2872 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Red String Investigation Board</title>
+
+
+    <!-- Lalezar -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        /* =========================================
+           RESET
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           VARIABLES
+        ========================================= */
+
+        :root {
+
+            --red: #ff1744;
+            --red-dark: #95001e;
+
+            --background: #070707;
+            --panel: #111111;
+
+            --text: #ffffff;
+            --muted: #888888;
+
+            --paper: #f3ead8;
+
+        }
+
+
+        /* =========================================
+           BODY
+        ========================================= */
+
+        body {
+
+            width: 100vw;
+            height: 100vh;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #2b2119 0%,
+                    #130e0a 45%,
+                    #050505 100%
+                );
+
+            color: var(--text);
+
+            font-family: "Lalezar", cursive;
+        }
+
+
+        /* =========================================
+           TOOLBAR
+        ========================================= */
+
+        .toolbar {
+
+            position: fixed;
+
+            top: 0;
+            right: 0;
+            left: 0;
+
+            height: 70px;
+
+            padding: 0 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            background:
+                rgba(7, 7, 7, 0.94);
+
+            backdrop-filter: blur(14px);
+
+            border-bottom:
+                1px solid
+                rgba(255, 23, 68, 0.25);
+
+            z-index: 1000;
+        }
+
+
+        /* =========================================
+           BRAND
+        ========================================= */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .brand-dot {
+
+            width: 14px;
+            height: 14px;
+
+            border-radius: 50%;
+
+            background: var(--red);
+
+            box-shadow:
+                0 0 10px var(--red),
+                0 0 25px rgba(255, 23, 68, .45);
+        }
+
+
+        .brand h1 {
+
+            font-family: Arial, sans-serif;
+
+            font-size: 15px;
+
+            letter-spacing: 3px;
+
+            color: var(--red);
+        }
+
+
+        .brand span {
+
+            display: block;
+
+            margin-top: 2px;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 8px;
+
+            color: #777;
+
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
+        .tools {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+
+        .tool-btn {
+
+            height: 40px;
+
+            padding:
+                0 15px;
+
+            border:
+                1px solid #333;
+
+            border-radius: 8px;
+
+            background:
+                #151515;
+
+            color: white;
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            transition:
+                .2s ease;
+        }
+
+
+        .tool-btn:hover {
+
+            background: #252525;
+
+            border-color: #555;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .tool-btn.primary {
+
+            background: var(--red);
+
+            border-color: var(--red);
+        }
+
+
+        .tool-btn.primary:hover {
+
+            background: #ff315a;
+
+            border-color: #ff315a;
+        }
+
+
+        .tool-btn.active {
+
+            background:
+                #570015;
+
+            border-color:
+                var(--red);
+
+            box-shadow:
+                0 0 15px
+                rgba(255, 23, 68, .25);
+        }
+
+
+        /* =========================================
+           BOARD AREA
+        ========================================= */
+
+        .board-wrapper {
+
+            position: fixed;
+
+            top: 70px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+
+            overflow: hidden;
+        }
+
+
+        /* =========================================
+           BOARD
+        ========================================= */
+
+        .board {
+
+            position: absolute;
+
+            inset: 15px;
+
+            overflow: hidden;
+
+            border:
+                12px solid
+                #100c09;
+
+            border-radius: 18px;
+
+            background:
+
+                linear-gradient(
+                    rgba(255,255,255,.015),
+                    rgba(0,0,0,.08)
+                ),
+
+                repeating-linear-gradient(
+                    90deg,
+
+                    #231811 0px,
+                    #291c13 10px,
+                    #20150f 20px,
+                    #261a12 30px
+                );
+
+            box-shadow:
+
+                inset
+                0 0 70px
+                rgba(0,0,0,.8),
+
+                0 20px 60px
+                rgba(0,0,0,.55);
+        }
+
+
+        /* =========================================
+           BOARD TITLE
+        ========================================= */
+
+        .board-title {
+
+            position: absolute;
+
+            top: 20px;
+            right: 25px;
+
+            z-index: 5;
+
+            font-family:
+                Georgia,
+                serif;
+
+            font-size: 25px;
+
+            letter-spacing: 5px;
+
+            color:
+                rgba(255,255,255,.10);
+        }
+
+
+        .case-id {
+
+            position: absolute;
+
+            top: 20px;
+            left: 25px;
+
+            z-index: 5;
+
+            padding:
+                5px 10px;
+
+            border:
+                1px solid
+                rgba(255,23,68,.35);
+
+            color:
+                rgba(255,23,68,.75);
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            font-size: 9px;
+
+            letter-spacing: 3px;
+        }
+
+
+        /* =========================================
+           EMPTY MESSAGE
+        ========================================= */
+
+        .empty-message {
+
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            text-align: center;
+
+            color:
+                rgba(255,255,255,.08);
+
+            pointer-events: none;
+        }
+
+
+        .empty-message h2 {
+
+            font-family:
+                Georgia,
+                serif;
+
+            font-size: 40px;
+
+            letter-spacing: 8px;
+        }
+
+
+        .empty-message p {
+
+            margin-top: 10px;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            font-size: 10px;
+
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================================
+           SVG CONNECTION LAYER
+        ========================================= */
+
+        #connections {
+
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: visible;
+
+            pointer-events: none;
+
+            z-index: 10;
+        }
+
+
+        .connection-line {
+
+            stroke:
+                var(--red);
+
+            stroke-width: 4;
+
+            stroke-linecap: round;
+
+            fill: none;
+
+            filter:
+                drop-shadow(
+                    0 0 4px
+                    rgba(255, 0, 40, .9)
+                )
+
+                drop-shadow(
+                    0 0 10px
+                    rgba(255, 0, 40, .35)
+                );
+
+            opacity: .95;
+
+            pointer-events:
+                stroke;
+
+            cursor: pointer;
+
+            transition:
+                stroke-width .15s;
+        }
+
+
+        .connection-line:hover {
+
+            stroke-width: 7;
+        }
+
+
+        .connection-dot {
+
+            fill: var(--red);
+
+            filter:
+                drop-shadow(
+                    0 0 5px
+                    var(--red)
+                );
+
+            pointer-events: none;
+        }
+
+
+        /* =========================================
+           ITEMS
+        ========================================= */
+
+        .item {
+
+            position: absolute;
+
+            width: 230px;
+
+            min-height: 120px;
+
+            z-index: 20;
+
+            user-select: none;
+
+            cursor: grab;
+
+            box-shadow:
+                8px 12px 20px
+                rgba(0,0,0,.45);
+
+            transition:
+                box-shadow .2s;
+        }
+
+
+        .item:hover {
+
+            box-shadow:
+                10px 16px 30px
+                rgba(0,0,0,.6);
+        }
+
+
+        .item.selected {
+
+            outline:
+                2px solid
+                var(--red);
+
+            box-shadow:
+
+                0 0 0 4px
+                rgba(255,23,68,.15),
+
+                0 15px 35px
+                rgba(0,0,0,.6);
+        }
+
+
+        .item.dragging {
+
+            cursor: grabbing;
+
+            z-index: 500;
+        }
+
+
+        /* =========================================
+           DELETE BUTTON
+        ========================================= */
+
+        .delete-item {
+
+            position: absolute;
+
+            top: -12px;
+            left: -12px;
+
+            width: 28px;
+            height: 28px;
+
+            border:
+                1px solid
+                #650018;
+
+            border-radius: 50%;
+
+            background:
+                #16070a;
+
+            color:
+                #ff5574;
+
+            cursor: pointer;
+
+            opacity: 0;
+
+            z-index: 100;
+
+            transition:
+                .2s;
+        }
+
+
+        .item:hover
+        .delete-item {
+
+            opacity: 1;
+        }
+
+
+        .delete-item:hover {
+
+            background:
+                var(--red);
+
+            color: white;
+        }
+
+
+        /* =========================================
+           NOTE
+        ========================================= */
+
+        .note {
+
+            min-height: 175px;
+
+            padding: 15px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #f7efdd,
+                    #d8c9a8
+                );
+
+            color:
+                #1c1813;
+
+            transform:
+                rotate(-1deg);
+        }
+
+
+        .item-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+        }
+
+
+        .item-title {
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            font-size: 19px;
+
+            outline: none;
+
+            cursor: text;
+        }
+
+
+        .item-type {
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            font-size: 8px;
+
+            color:
+                #8c2033;
+
+            letter-spacing: 2px;
+        }
+
+
+        .editable {
+
+            width: 100%;
+
+            min-height: 95px;
+
+            resize: none;
+
+            border: none;
+
+            outline: none;
+
+            background:
+                transparent;
+
+            color:
+                #302820;
+
+            direction: rtl;
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+        }
+
+
+        .editable::placeholder {
+
+            color:
+                #8c8172;
+        }
+
+
+        /* =========================================
+           IMAGE CARD
+        ========================================= */
+
+        .image-card {
+
+            padding: 9px;
+
+            background:
+                #eee9dc;
+
+            color:
+                #25211d;
+        }
+
+
+        .image-card img {
+
+            display: block;
+
+            width: 100%;
+
+            height: 170px;
+
+            object-fit: cover;
+
+            background:
+                #141414;
+        }
+
+
+        .image-caption {
+
+            min-height: 32px;
+
+            padding:
+                7px 3px 2px;
+
+            outline: none;
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            font-size: 13px;
+
+            cursor: text;
+        }
+
+
+        /* =========================================
+           INSTRUCTIONS
+        ========================================= */
+
+        .instructions {
+
+            position: fixed;
+
+            right: 20px;
+            bottom: 18px;
+
+            z-index: 900;
+
+            padding:
+                8px 13px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius: 8px;
+
+            background:
+                rgba(5,5,5,.78);
+
+            color:
+                #999;
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            font-size: 11px;
+
+            pointer-events: none;
+        }
+
+
+        .instructions strong {
+
+            color:
+                var(--red);
+        }
+
+
+        /* =========================================
+           HIDDEN INPUT
+        ========================================= */
+
+        #imageInput {
+
+            display: none;
+        }
+
+
+        /* =========================================
+           TOAST
+        ========================================= */
+
+        .toast {
+
+            position: fixed;
+
+            left: 50%;
+
+            bottom: 30px;
+
+            transform:
+                translate(-50%, 20px);
+
+            padding:
+                10px 20px;
+
+            background:
+                rgba(10,10,10,.95);
+
+            border:
+                1px solid
+                rgba(255,23,68,.4);
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-family:
+                "Lalezar",
+                cursive;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            z-index: 5000;
+
+            transition:
+                .3s ease;
+        }
+
+
+        .toast.show {
+
+            opacity: 1;
+
+            transform:
+                translate(-50%, 0);
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .toolbar {
+
+                height: 60px;
+
+                padding: 0 10px;
+            }
+
+
+            .board-wrapper {
+
+                top: 60px;
+            }
+
+
+            .board {
+
+                inset: 8px;
+
+                border-width: 8px;
+            }
+
+
+            .brand h1 {
+
+                font-size: 10px;
+            }
+
+
+            .brand span {
+
+                display: none;
+            }
+
+
+            .tool-btn {
+
+                padding:
+                    0 8px;
+
+                font-size: 10px;
+            }
+
+
+            .instructions {
+
+                display: none;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         TOOLBAR
+    ========================================== -->
+
+    <header class="toolbar">
+
+        <div class="brand">
+
+            <div class="brand-dot"></div>
+
+            <div>
+
+                <h1>
+                    RED STRING BOARD
+                </h1>
+
+                <span>
+                    INVESTIGATION SYSTEM
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="tools">
+
+            <button
+                class="tool-btn primary"
+                id="addNote">
+
+                + یادداشت
+
+            </button>
+
+
+            <button
+                class="tool-btn"
+                id="addImage">
+
+                + عکس
+
+            </button>
+
+
+            <button
+                class="tool-btn"
+                id="connectMode">
+
+                🔗 اتصال
+
+            </button>
+
+
+            <button
+                class="tool-btn primary"
+                id="saveBoard">
+
+                💾 ذخیره
+
+            </button>
+
+
+            <button
+                class="tool-btn"
+                id="clearBoard">
+
+                🗑 پاک کردن
+
+            </button>
+
+
+            <button
+                class="tool-btn"
+                id="cancelMode">
+
+                لغو
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         BOARD
+    ========================================== -->
+
+    <main class="board-wrapper">
+
+        <section
+            class="board"
+            id="board"
+        >
+
+            <div class="board-title">
+                INVESTIGATION BOARD
+            </div>
+
+
+            <div class="case-id">
+                CASE #047
+            </div>
+
+
+            <div
+                class="empty-message"
+                id="emptyMessage"
+            >
+
+                <h2>
+                    CASE FILE
+                </h2>
+
+                <p>
+                    ADD EVIDENCE TO BEGIN
+                </p>
+
+            </div>
+
+
+            <svg id="connections">
+
+                <g id="connectionLayer"></g>
+
+            </svg>
+
+        </section>
+
+    </main>
+
+
+    <!-- IMAGE INPUT -->
+
+    <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        multiple
+    >
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div class="instructions">
+
+        <strong>اتصال:</strong>
+        حالت اتصال را فعال کن و روی دو مدرک کلیک کن
+
+    </div>
+
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast"
+    >
+    </div>
+
+
+    <script>
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const board =
+            document.getElementById("board");
+
+        const connectionLayer =
+            document.getElementById(
+                "connectionLayer"
+            );
+
+        const addNoteButton =
+            document.getElementById(
+                "addNote"
+            );
+
+        const addImageButton =
+            document.getElementById(
+                "addImage"
+            );
+
+        const connectButton =
+            document.getElementById(
+                "connectMode"
+            );
+
+        const saveButton =
+            document.getElementById(
+                "saveBoard"
+            );
+
+        const clearBoardButton =
+            document.getElementById(
+                "clearBoard"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "cancelMode"
+            );
+
+        const imageInput =
+            document.getElementById(
+                "imageInput"
+            );
+
+        const emptyMessage =
+            document.getElementById(
+                "emptyMessage"
+            );
+
+        const toast =
+            document.getElementById(
+                "toast"
+            );
+
+
+        /* =====================================================
+           STATE
+        ===================================================== */
+
+        let itemCounter = 0;
+
+        let connectionMode = false;
+
+        let connectionSelection = [];
+
+        let connections = [];
+
+        let draggedItem = null;
+
+        let dragOffsetX = 0;
+
+        let dragOffsetY = 0;
+
+
+        /* =====================================================
+           STORAGE KEY
+        ===================================================== */
+
+        const STORAGE_KEY =
+            "red_string_investigation_board";
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        let toastTimer;
+
+
+        function showToast(message) {
+
+            toast.textContent =
+                message;
+
+            toast.classList.add("show");
+
+            clearTimeout(toastTimer);
+
+            toastTimer =
+                setTimeout(() => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                }, 2200);
+        }
+
+
+        /* =====================================================
+           ID
+        ===================================================== */
+
+        function generateId() {
+
+            itemCounter++;
+
+            return `item-${itemCounter}`;
+        }
+
+
+        /* =====================================================
+           EMPTY MESSAGE
+        ===================================================== */
+
+        function updateEmptyMessage() {
+
+            const items =
+                board.querySelectorAll(
+                    ".item"
+                );
+
+            emptyMessage.style.display =
+                items.length === 0
+                    ? "block"
+                    : "none";
+        }
+
+
+        /* =====================================================
+           CREATE NOTE
+        ===================================================== */
+
+        function createNote(
+            x = 100,
+            y = 120,
+            title = "مدرک جدید",
+            text = "",
+            rotation = -1
+        ) {
+
+            const id =
+                generateId();
+
+
+            const note =
+                document.createElement(
+                    "article"
+                );
+
+
+            note.className =
+                "item note";
+
+
+            note.dataset.id =
+                id;
+
+
+            note.style.left =
+                `${x}px`;
+
+
+            note.style.top =
+                `${y}px`;
+
+
+            note.style.transform =
+                `rotate(${rotation}deg)`;
+
+
+            note.innerHTML = `
+
+                <button
+                    class="delete-item"
+                    title="حذف">
+
+                    ×
+
+                </button>
+
+
+                <div class="item-header">
+
+                    <div
+                        class="item-title"
+                        contenteditable="true">
+
+                        ${escapeHtml(title)}
+
+                    </div>
+
+
+                    <div class="item-type">
+
+                        NOTE
+
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    class="editable"
+                    placeholder="اینجا اطلاعات یا سرنخ را بنویس..."
+                ></textarea>
+
+            `;
+
+
+            note.querySelector(
+                ".editable"
+            ).value =
+                text;
+
+
+            board.appendChild(
+                note
+            );
+
+
+            setupItem(
+                note
+            );
+
+
+            updateEmptyMessage();
+
+
+            return note;
+        }
+
+
+        /* =====================================================
+           CREATE IMAGE
+        ===================================================== */
+
+        function createImage(
+            src,
+            caption = "تصویر مدرک",
+            x = 300,
+            y = 150,
+            rotation = 0
+        ) {
+
+            const id =
+                generateId();
+
+
+            const imageCard =
+                document.createElement(
+                    "article"
+                );
+
+
+            imageCard.className =
+                "item image-card";
+
+
+            imageCard.dataset.id =
+                id;
+
+
+            imageCard.style.left =
+                `${x}px`;
+
+
+            imageCard.style.top =
+                `${y}px`;
+
+
+            imageCard.style.transform =
+                `rotate(${rotation}deg)`;
+
+
+            imageCard.innerHTML = `
+
+                <button
+                    class="delete-item"
+                    title="حذف">
+
+                    ×
+
+                </button>
+
+
+                <img
+                    src="${src}"
+                    alt="Evidence"
+                >
+
+
+                <div
+                    class="image-caption"
+                    contenteditable="true">
+
+                    ${escapeHtml(caption)}
+
+                </div>
+
+            `;
+
+
+            board.appendChild(
+                imageCard
+            );
+
+
+            setupItem(
+                imageCard
+            );
+
+
+            updateEmptyMessage();
+
+
+            return imageCard;
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
+        ===================================================== */
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+
+        /* =====================================================
+           SETUP ITEM
+        ===================================================== */
+
+        function setupItem(item) {
+
+            const deleteButton =
+                item.querySelector(
+                    ".delete-item"
+                );
+
+
+            /* DELETE */
+
+            deleteButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    removeItem(
+                        item
+                    );
+                }
+            );
+
+
+            /* POINTER DOWN */
+
+            item.addEventListener(
+                "pointerdown",
+                event => {
+
+                    if (
+                        event.target.closest(
+                            ".delete-item"
+                        )
+                    ) {
+
+                        return;
+                    }
+
+
+                    if (
+                        event.target.closest(
+                            "textarea"
+                        )
+                    ) {
+
+                        return;
+                    }
+
+
+                    if (
+                        event.target.closest(
+                            "[contenteditable='true']"
+                        )
+                    ) {
+
+                        return;
+                    }
+
+
+                    /* CONNECTION MODE */
+
+                    if (connectionMode) {
+
+                        selectForConnection(
+                            item
+                        );
+
+                        return;
+                    }
+
+
+                    /* DRAG */
+
+                    draggedItem =
+                        item;
+
+
+                    const rect =
+                        item.getBoundingClientRect();
+
+                    dragOffsetX =
+                        event.clientX
+                        - rect.left;
+
+                    dragOffsetY =
+                        event.clientY
+                        - rect.top;
+
+
+                    item.setPointerCapture(
+                        event.pointerId
+                    );
+
+
+                    item.classList.add(
+                        "dragging"
+                    );
+                }
+            );
+
+
+            /* POINTER MOVE */
+
+            item.addEventListener(
+                "pointermove",
+                event => {
+
+                    if (
+                        draggedItem !== item
+                    ) {
+
+                        return;
+                    }
+
+
+                    const boardRect =
+                        board.getBoundingClientRect();
+
+
+                    const itemRect =
+                        item.getBoundingClientRect();
+
+
+                    let x =
+                        event.clientX
+                        - boardRect.left
+                        - dragOffsetX;
+
+
+                    let y =
+                        event.clientY
+                        - boardRect.top
+                        - dragOffsetY;
+
+
+                    const maxX =
+                        board.clientWidth
+                        - itemRect.width;
+
+
+                    const maxY =
+                        board.clientHeight
+                        - itemRect.height;
+
+
+                    x =
+                        Math.max(
+                            0,
+                            Math.min(
+                                x,
+                                maxX
+                            )
+                        );
+
+
+                    y =
+                        Math.max(
+                            0,
+                            Math.min(
+                                y,
+                                maxY
+                            )
+                        );
+
+
+                    item.style.left =
+                        `${x}px`;
+
+
+                    item.style.top =
+                        `${y}px`;
+
+
+                    renderConnections();
+                }
+            );
+
+
+            /* POINTER UP */
+
+            item.addEventListener(
+                "pointerup",
+                event => {
+
+                    if (
+                        draggedItem !== item
+                    ) {
+
+                        return;
+                    }
+
+
+                    draggedItem =
+                        null;
+
+
+                    item.classList.remove(
+                        "dragging"
+                    );
+
+
+                    try {
+
+                        item.releasePointerCapture(
+                            event.pointerId
+                        );
+
+                    } catch {}
+                }
+            );
+        }
+
+
+        /* =====================================================
+           REMOVE ITEM
+        ===================================================== */
+
+        function removeItem(item) {
+
+            const id =
+                item.dataset.id;
+
+
+            connections =
+                connections.filter(
+                    connection =>
+                        connection.from !== id &&
+                        connection.to !== id
+                );
+
+
+            connectionSelection =
+                connectionSelection.filter(
+                    selectedId =>
+                        selectedId !== id
+                );
+
+
+            item.remove();
+
+
+            renderConnections();
+
+            updateEmptyMessage();
+
+            showToast(
+                "مدرک حذف شد"
+            );
+        }
+
+
+        /* =====================================================
+           CONNECTION MODE
+        ===================================================== */
+
+        connectButton.addEventListener(
+            "click",
+            () => {
+
+                connectionMode =
+                    !connectionMode;
+
+
+                connectionSelection =
+                    [];
+
+
+                clearSelections();
+
+
+                connectButton.classList.toggle(
+                    "active",
+                    connectionMode
+                );
+
+
+                connectButton.textContent =
+                    connectionMode
+                        ? "🔗 در حال اتصال"
+                        : "🔗 اتصال";
+            }
+        );
+
+
+        /* =====================================================
+           CONNECTION SELECTION
+        ===================================================== */
+
+        function selectForConnection(item) {
+
+            const id =
+                item.dataset.id;
+
+
+            if (
+                connectionSelection.includes(
+                    id
+                )
+            ) {
+
+                return;
+            }
+
+
+            connectionSelection.push(
+                id
+            );
+
+
+            item.classList.add(
+                "selected"
+            );
+
+
+            if (
+                connectionSelection.length === 2
+            ) {
+
+                const from =
+                    connectionSelection[0];
+
+
+                const to =
+                    connectionSelection[1];
+
+
+                const exists =
+                    connections.some(
+                        connection =>
+
+                            (
+                                connection.from === from &&
+                                connection.to === to
+                            )
+
+                            ||
+
+                            (
+                                connection.from === to &&
+                                connection.to === from
+                            )
+                    );
+
+
+                if (!exists) {
+
+                    connections.push({
+
+                        id:
+                            createConnectionId(),
+
+                        from,
+                        to
+
+                    });
+
+
+                    showToast(
+                        "دو مدرک به هم وصل شدند"
+                    );
+
+                } else {
+
+                    showToast(
+                        "این دو مدرک قبلاً وصل هستند"
+                    );
+                }
+
+
+                connectionSelection =
+                    [];
+
+
+                clearSelections();
+
+
+                renderConnections();
+            }
+        }
+
+
+        /* =====================================================
+           CONNECTION ID
+        ===================================================== */
+
+        function createConnectionId() {
+
+            return (
+                "connection-" +
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .slice(2)
+            );
+        }
+
+
+        /* =====================================================
+           CLEAR SELECTIONS
+        ===================================================== */
+
+        function clearSelections() {
+
+            board
+                .querySelectorAll(
+                    ".item.selected"
+                )
+                .forEach(item => {
+
+                    item.classList.remove(
+                        "selected"
+                    );
+                });
+        }
+
+
+        /* =====================================================
+           CANCEL MODE
+        ===================================================== */
+
+        function cancelMode() {
+
+            connectionMode =
+                false;
+
+
+            connectionSelection =
+                [];
+
+
+            clearSelections();
+
+
+            connectButton.classList.remove(
+                "active"
+            );
+
+
+            connectButton.textContent =
+                "🔗 اتصال";
+        }
+
+
+        cancelButton.addEventListener(
+            "click",
+            cancelMode
+        );
+
+
+        /* =====================================================
+           ITEM CENTER
+        ===================================================== */
+
+        function getItemCenter(item) {
+
+            const boardRect =
+                board.getBoundingClientRect();
+
+
+            const rect =
+                item.getBoundingClientRect();
+
+
+            return {
+
+                x:
+                    rect.left
+                    - boardRect.left
+                    + rect.width / 2,
+
+                y:
+                    rect.top
+                    - boardRect.top
+                    + rect.height / 2
+
+            };
+        }
+
+
+        /* =====================================================
+           RENDER CONNECTIONS
+        ===================================================== */
+
+        function renderConnections() {
+
+            connectionLayer.innerHTML =
+                "";
+
+
+            connections.forEach(
+                connection => {
+
+                    const from =
+                        board.querySelector(
+                            `[data-id="${connection.from}"]`
+                        );
+
+
+                    const to =
+                        board.querySelector(
+                            `[data-id="${connection.to}"]`
+                        );
+
+
+                    if (!from || !to) {
+
+                        return;
+                    }
+
+
+                    const p1 =
+                        getItemCenter(from);
+
+
+                    const p2 =
+                        getItemCenter(to);
+
+
+                    /*
+                        Curve
+                    */
+
+                    const middleX =
+                        (p1.x + p2.x) / 2;
+
+
+                    const middleY =
+                        (p1.y + p2.y) / 2;
+
+
+                    const dx =
+                        p2.x - p1.x;
+
+
+                    const dy =
+                        p2.y - p1.y;
+
+
+                    const distance =
+                        Math.sqrt(
+                            dx * dx +
+                            dy * dy
+                        );
+
+
+                    const curve =
+                        Math.min(
+                            100,
+                            distance * .18
+                        );
+
+
+                    const path =
+                        document.createElementNS(
+                            "http://www.w3.org/2000/svg",
+                            "path"
+                        );
+
+
+                    const d = `
+
+                        M ${p1.x} ${p1.y}
+
+                        Q
+                        ${middleX}
+                        ${middleY - curve}
+                        ${p2.x}
+                        ${p2.y}
+
+                    `;
+
+
+                    path.setAttribute(
+                        "d",
+                        d
+                    );
+
+
+                    path.classList.add(
+                        "connection-line"
+                    );
+
+
+                    path.addEventListener(
+                        "contextmenu",
+                        event => {
+
+                            event.preventDefault();
+
+
+                            connections =
+                                connections.filter(
+                                    c =>
+                                        c.id !==
+                                        connection.id
+                                );
+
+
+                            renderConnections();
+
+
+                            showToast(
+                                "اتصال حذف شد"
+                            );
+                        }
+                    );
+
+
+                    connectionLayer.appendChild(
+                        path
+                    );
+
+
+                    /*
+                        Start Dot
+                    */
+
+                    const dot1 =
+                        document.createElementNS(
+                            "http://www.w3.org/2000/svg",
+                            "circle"
+                        );
+
+
+                    dot1.classList.add(
+                        "connection-dot"
+                    );
+
+
+                    dot1.setAttribute(
+                        "cx",
+                        p1.x
+                    );
+
+
+                    dot1.setAttribute(
+                        "cy",
+                        p1.y
+                    );
+
+
+                    dot1.setAttribute(
+                        "r",
+                        5
+                    );
+
+
+                    connectionLayer.appendChild(
+                        dot1
+                    );
+
+
+                    /*
+                        End Dot
+                    */
+
+                    const dot2 =
+                        document.createElementNS(
+                            "http://www.w3.org/2000/svg",
+                            "circle"
+                        );
+
+
+                    dot2.classList.add(
+                        "connection-dot"
+                    );
+
+
+                    dot2.setAttribute(
+                        "cx",
+                        p2.x
+                    );
+
+
+                    dot2.setAttribute(
+                        "cy",
+                        p2.y
+                    );
+
+
+                    dot2.setAttribute(
+                        "r",
+                        5
+                    );
+
+
+                    connectionLayer.appendChild(
+                        dot2
+                    );
+                }
+            );
+        }
+
+
+        /* =====================================================
+           ADD NOTE
+        ===================================================== */
+
+        addNoteButton.addEventListener(
+            "click",
+            () => {
+
+                const note =
+                    createNote(
+                        100 +
+                        Math.random() * 500,
+
+                        100 +
+                        Math.random() * 300
+                    );
+
+
+                note
+                    .querySelector(
+                        ".editable"
+                    )
+                    .focus();
+
+
+                showToast(
+                    "یادداشت جدید اضافه شد"
+                );
+            }
+        );
+
+
+        /* =====================================================
+           IMAGE BUTTON
+        ===================================================== */
+
+        addImageButton.addEventListener(
+            "click",
+            () => {
+
+                imageInput.click();
+            }
+        );
+
+
+        /* =====================================================
+           IMAGE UPLOAD
+        ===================================================== */
+
+        imageInput.addEventListener(
+            "change",
+            event => {
+
+                const files =
+                    Array.from(
+                        event.target.files
+                    );
+
+
+                files.forEach(
+                    file => {
+
+                        if (
+                            !file.type.startsWith(
+                                "image/"
+                            )
+                        ) {
+
+                            return;
+                        }
+
+
+                        const reader =
+                            new FileReader();
+
+
+                        reader.onload =
+                            () => {
+
+                                createImage(
+
+                                    reader.result,
+
+                                    file.name,
+
+                                    150 +
+                                    Math.random() * 600,
+
+                                    100 +
+                                    Math.random() * 300,
+
+                                    Math.random() *
+                                    4 - 2
+                                );
+
+
+                                showToast(
+                                    "عکس اضافه شد"
+                                );
+                            };
+
+
+                        reader.readAsDataURL(
+                            file
+                        );
+                    }
+                );
+
+
+                imageInput.value = "";
+            }
+        );
+
+
+        /* =====================================================
+           COLLECT BOARD DATA
+        ===================================================== */
+
+        function collectBoardData() {
+
+            const items = [];
+
+
+            board
+                .querySelectorAll(
+                    ".item"
+                )
+                .forEach(item => {
+
+
+                    const data = {
+
+                        id:
+                            item.dataset.id,
+
+                        type:
+                            item.classList.contains(
+                                "note"
+                            )
+                                ? "note"
+                                : "image",
+
+                        x:
+                            parseFloat(
+                                item.style.left
+                            ) || 0,
+
+                        y:
+                            parseFloat(
+                                item.style.top
+                            ) || 0,
+
+                        transform:
+                            item.style.transform ||
+                            ""
+
+                    };
+
+
+                    if (
+                        data.type ===
+                        "note"
+                    ) {
+
+                        data.title =
+                            item
+                                .querySelector(
+                                    ".item-title"
+                                )
+                                ?.innerText
+                                .trim() ||
+                            "";
+
+
+                        data.text =
+                            item
+                                .querySelector(
+                                    ".editable"
+                                )
+                                ?.value ||
+                            "";
+                    }
+
+
+                    if (
+                        data.type ===
+                        "image"
+                    ) {
+
+                        data.src =
+                            item
+                                .querySelector(
+                                    "img"
+                                )
+                                ?.src ||
+                            "";
+
+
+                        data.caption =
+                            item
+                                .querySelector(
+                                    ".image-caption"
+                                )
+                                ?.innerText
+                                .trim() ||
+                            "";
+                    }
+
+
+                    items.push(data);
+
+                });
+
+
+            return {
+
+                version: 1,
+
+                savedAt:
+                    new Date().toISOString(),
+
+                items:
+
+                    items,
+
+                connections:
+
+                    connections
+            };
+        }
+
+
+        /* =====================================================
+           SAVE BOARD
+        ===================================================== */
+
+        function saveBoard() {
+
+            const data =
+                collectBoardData();
+
+
+            try {
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(data)
+                );
+
+
+                showToast(
+                    "تابلو با موفقیت ذخیره شد ✓"
+                );
+
+
+                saveButton.textContent =
+                    "✓ ذخیره شد";
+
+
+                setTimeout(
+                    () => {
+
+                        saveButton.textContent =
+                            "💾 ذخیره";
+
+                    },
+                    1500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                showToast(
+                    "فضای ذخیره‌سازی کافی نیست"
+                );
+            }
+        }
+
+
+        saveButton.addEventListener(
+            "click",
+            saveBoard
+        );
+
+
+        /* =====================================================
+           LOAD BOARD
+        ===================================================== */
+
+        function loadBoard() {
+
+            const saved =
+                localStorage.getItem(
+                    STORAGE_KEY
+                );
+
+
+            if (!saved) {
+
+                createDemoBoard();
+
+                return;
+            }
+
+
+            try {
+
+                const data =
+                    JSON.parse(
+                        saved
+                    );
+
+
+                clearBoardDOM();
+
+
+                let maxNumber = 0;
+
+
+                data.items.forEach(
+                    itemData => {
+
+
+                        const match =
+                            itemData.id?.match(
+                                /^item-(\d+)$/
+                            );
+
+
+                        if (match) {
+
+                            maxNumber =
+                                Math.max(
+                                    maxNumber,
+                                    Number(
+                                        match[1]
+                                    )
+                                );
+                        }
+
+
+                        if (
+                            itemData.type ===
+                            "note"
+                        ) {
+
+                            const note =
+                                createNote(
+
+                                    itemData.x,
+
+                                    itemData.y,
+
+                                    itemData.title,
+
+                                    itemData.text,
+
+                                    extractRotation(
+                                        itemData.transform,
+                                        -1
+                                    )
+                                );
+
+
+                            note.dataset.id =
+                                itemData.id;
+                        }
+
+
+                        else if (
+                            itemData.type ===
+                            "image"
+                        ) {
+
+                            const image =
+                                createImage(
+
+                                    itemData.src,
+
+                                    itemData.caption,
+
+                                    itemData.x,
+
+                                    itemData.y,
+
+                                    extractRotation(
+                                        itemData.transform,
+                                        0
+                                    )
+                                );
+
+
+                            image.dataset.id =
+                                itemData.id;
+                        }
+
+                    }
+                );
+
+
+                itemCounter =
+                    maxNumber;
+
+
+                connections =
+                    Array.isArray(
+                        data.connections
+                    )
+                        ? data.connections
+                        : [];
+
+
+                /*
+                    اتصال‌هایی که
+                    دیگر مقصد ندارند حذف شوند
+                */
+
+                connections =
+                    connections.filter(
+                        connection =>
+
+                            board.querySelector(
+                                `[data-id="${connection.from}"]`
+                            )
+
+                            &&
+
+                            board.querySelector(
+                                `[data-id="${connection.to}"]`
+                            )
+                    );
+
+
+                renderConnections();
+
+                updateEmptyMessage();
+
+
+                console.log(
+                    "Board loaded:",
+                    data.savedAt
+                );
+
+
+                showToast(
+                    "آخرین تابلو بازیابی شد"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Load error:",
+                    error
+                );
+
+
+                showToast(
+                    "خطا در بازیابی تابلو"
+                );
+
+
+                createDemoBoard();
+            }
+        }
+
+
+        /* =====================================================
+           EXTRACT ROTATION
+        ===================================================== */
+
+        function extractRotation(
+            transform,
+            fallback = 0
+        ) {
+
+            if (
+                !transform
+            ) {
+
+                return fallback;
+            }
+
+
+            const match =
+                transform.match(
+                    /rotate\((-?[\d.]+)deg\)/
+                );
+
+
+            if (!match) {
+
+                return fallback;
+            }
+
+
+            return Number(
+                match[1]
+            );
+        }
+
+
+        /* =====================================================
+           CLEAR DOM
+        ===================================================== */
+
+        function clearBoardDOM() {
+
+            board
+                .querySelectorAll(
+                    ".item"
+                )
+                .forEach(
+                    item =>
+                        item.remove()
+                );
+
+
+            connections =
+                [];
+
+
+            connectionSelection =
+                [];
+
+
+            renderConnections();
+
+            updateEmptyMessage();
+        }
+
+
+        /* =====================================================
+           CLEAR COMPLETE BOARD
+        ===================================================== */
+
+        clearBoardButton.addEventListener(
+            "click",
+            () => {
+
+                const answer =
+                    confirm(
+                        "آیا مطمئنی می‌خواهی کل تابلو و ذخیره آن را پاک کنی؟"
+                    );
+
+
+                if (!answer) {
+
+                    return;
+                }
+
+
+                clearBoardDOM();
+
+
+                localStorage.removeItem(
+                    STORAGE_KEY
+                );
+
+
+                itemCounter =
+                    0;
+
+
+                showToast(
+                    "تابلو کاملاً پاک شد"
+                );
+            }
+        );
+
+
+        /* =====================================================
+           DEMO BOARD
+        ===================================================== */
+
+        function createDemoBoard() {
+
+            const note1 =
+                createNote(
+                    100,
+                    120,
+                    "مظنون شماره ۱",
+                    "آخرین بار ساعت ۲۳:۴۲ در نزدیکی انبار دیده شده است.",
+                    -2
+                );
+
+
+            const note2 =
+                createNote(
+                    430,
+                    190,
+                    "شماره تلفن",
+                    "این شماره سه بار در همان شب تماس گرفته است.",
+                    1
+                );
+
+
+            const note3 =
+                createNote(
+                    760,
+                    110,
+                    "انبار شماره 17",
+                    "دوربین امنیتی ورود یک خودرو در ساعت 03:42 را ثبت کرده است.",
+                    -1
+                );
+
+
+            const note4 =
+                createNote(
+                    350,
+                    470,
+                    "دفترچه قرمز",
+                    "آخرین صفحه حاوی مختصات انبار است.",
+                    2
+                );
+
+
+            connections.push(
+
+                {
+                    id:
+                        createConnectionId(),
+
+                    from:
+                        note1.dataset.id,
+
+                    to:
+                        note2.dataset.id
+                },
+
+
+                {
+                    id:
+                        createConnectionId(),
+
+                    from:
+                        note2.dataset.id,
+
+                    to:
+                        note3.dataset.id
+                },
+
+
+                {
+                    id:
+                        createConnectionId(),
+
+                    from:
+                        note3.dataset.id,
+
+                    to:
+                        note4.dataset.id
+                }
+
+            );
+
+
+            renderConnections();
+
+            updateEmptyMessage();
+        }
+
+
+        /* =====================================================
+           KEYBOARD
+        ===================================================== */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                /*
+                    ESC
+                */
+
+                if (
+                    event.key ===
+                    "Escape"
+                ) {
+
+                    cancelMode();
+                }
+            }
+        );
+
+
+        /* =====================================================
+           RESIZE
+        ===================================================== */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                renderConnections();
+            }
+        );
+
+
+        /* =====================================================
+           INITIALIZATION
+        ===================================================== */
+
+        loadBoard();
+
+    </script>
+
+</body>
+
+</html>
